@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Address Book</title>
+	<link rel="stylesheet"
+		href="webjars/bootstrap/4.5.3/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/main.css" />
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+	<nav class="navbar bg-custom navbar-expand-sm bg-dark navbar-dark py-1">
+		<a class="navbar-brand" href="/">My Address Book</a>
+	</nav>
+	<div class="col-sm-5">
+        <div class="page-header">
+            <h1>ユーザー登録画面</h1>
+        </div>
+        <form method="post" th:action="@{/validate}" th:object="${addressbookForm}"
+        	id="addressbookForm" name="addressbookForm">
+            <table class="table table-bordered table-hover">
+                <!-- ユーザーID -->
+                <tr>
+                    <th class="active col-sm-3">ID</th>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" th:field="*{id}" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="active">FirstName</th>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control"  th:field="*{firstname}" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="active">LastName</th>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control"  th:field="*{lastname}" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="active">Phonenumber</th>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" th:field="*{phonenumber}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="active">Email</th>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" th:field="*{email}" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="active">Address</th>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" th:field="*{address}" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <!-- エラーメッセージの一覧表示 -->
+            <ul>
+                <li th:each="error : ${#fields.detailedErrors()}">
+                    <span th:text="${error.message}">Error message</span>
+                </li>
+            </ul>
+            <button class="btn btn-primary validateBtn" type="submit"
+            		name="validateBtn" id="validateBtn" th:href="@{/validate}">
+            	Validate
+            </button>
+        </form>
+</body>
+
+<script type="text/javascript">
+$(function() {
+
+$(document).ready(function() {
+	$('.validateBtn').on('click', function(event) {
+		event.preventDefault();
+		
+//		alert("modal save");
+		var href = $(this).attr('href');
+		alert(href);
+		var formdata = $('#addressbookForm').serializeArray();
+		alert(formdata);
+		
+		$.ajax({
+			url: href,
+			type: "POST",
+			data: formdata,
+//			dataType: "json",
+//			dataType: "text",
+//			contentType: "application/json",
+//			async: true,
+			timespan: 1000,
+			})
+			.done(function (data1, textStatus, jqXHR) {
+				console.log(jqXHR.status); // 200
+				console.log(textStatus); // success
+//				$('.myForm #firstname').val('');
+//				$('.myForm #exampleModal').modal();
+//				adata1lert(data1);
+//				console.log(data1);
+//				console.log(jqXHR);
+//				console.log(data1);
+//				var bodyInnerHTML = $('body', $(data1)).html();
+//				var bodyInnerHTML = $('body').html();
+//				console.log(bodyInnerHTML);
+//				$('body').html(bodyInnerHTML);
+				$('html').html(data1);
+			})
+			.fail(function (jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR.status); //例：404
+				console.log(textStatus); //例：error
+				console.log(errorThrown); //例：NOT FOUND
+			})
+			.always(function () {
+				console.log("complete"); // complete
+		});
+	});
+});
+
+});
+</script>
+
+</html>
